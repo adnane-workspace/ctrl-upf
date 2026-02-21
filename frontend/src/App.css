@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.app-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 50px 60px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  max-width: 480px;
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 12px;
+  animation: fadeIn 0.4s ease;
+}
+
+.status.loading {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.status.success {
+  background: rgba(72, 199, 142, 0.12);
+  border: 1px solid rgba(72, 199, 142, 0.3);
+}
+
+.status.error {
+  background: rgba(255, 99, 88, 0.12);
+  border: 1px solid rgba(255, 99, 88, 0.3);
+}
+
+.icon {
+  font-size: 2.5rem;
+}
+
+.message {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.timestamp {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Spinner de chargement */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #a78bfa;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+small {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,26 @@
+# ============================================
+# RACINE DU PROJET - Fichiers à NE PAS pousser
+# ============================================
+
+# 📦 Dépendances (présentes dans backend/ et frontend/)
+node_modules/
+
+# 🔐 Tous les fichiers .env du projet
+**/.env
+**/.env.local
+**/.env.*.local
+
+# 📝 Logs
+*.log
+logs/
+
+# 💻 Fichiers système OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 🛠️ Éditeurs de code
+.vscode/
+.idea/
+*.swp
+*.swo

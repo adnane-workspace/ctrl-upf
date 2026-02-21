@@ -1,0 +1,33 @@
+# ============================================
+# BACKEND - Fichiers à NE PAS pousser sur GitHub
+# ============================================
+
+# 🔐 Variables d'environnement (données sensibles : mots de passe, clés API, URI MongoDB)
+.env
+.env.local
+.env.*.local
+
+# 📦 Dépendances Node (se réinstallent avec "npm install")
+node_modules/
+
+# 📝 Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🗂️ Fichiers de cache
+.npm
+.cache/
+
+# 💻 Fichiers système OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 🛠️ Éditeurs de code
+.vscode/
+.idea/
+*.swp
+*.swo
