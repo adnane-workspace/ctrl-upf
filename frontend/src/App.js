@@ -1,60 +1,75 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import "./index.css";
+import LoginPage from "./pages/LoginPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProfesseurDashboard from "./pages/ProfesseurDashboard";
+import EtudiantDashboard from "./pages/EtudiantDashboard";
+import { authAPI } from "./api";
 
-function App() {
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("loading");
-  const [timestamp, setTimestamp] = useState("");
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(true); // vérifie le token au démarrage
 
+  // Au démarrage : si un token existe, récupérer le profil automatiquement
   useEffect(() => {
-    axios
-      .get("/api/test")
-      .then((res) => {
-        console.log(" Réponse backend :", res.data);
-        setMessage(res.data.message);
-        setTimestamp(res.data.timestamp);
-        setStatus("success");
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setChecking(false);
+      return;
+    }
+    authAPI.getMe()
+      .then((res) => setUser(res.data.user))
+      .catch(() => {
+        // Token invalide/expiré → nettoyer et afficher le login
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       })
-      .catch((err) => {
-        console.error(" Erreur de communication :", err);
-        setMessage("Impossible de contacter le serveur.");
-        setStatus("error");
-      });
+      .finally(() => setChecking(false));
   }, []);
 
-  return (
-    <div className="app-container">
-      <div className="card">
-        <h1>Test Communication</h1>
+  const handleLogin = (userData) => setUser(userData);
 
-        {status === "loading" && (
-          <div className="status loading">
-            <span className="spinner"></span>
-            <p>Connexion au backend...</p>
-          </div>
-        )}
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
-        {status === "success" && (
-          <div className="status success">
-            <p className="message">{message}</p>
-            {timestamp && (
-              <small className="timestamp">
-                Réponse reçue à : {new Date(timestamp).toLocaleTimeString("fr-FR")}
-              </small>
-            )}
-          </div>
-        )}
-
-        {status === "error" && (
-          <div className="status error">
-            <p className="message">{message}</p>
-            <small>Vérifiez que le backend est démarré sur le port 5000.</small>
-          </div>
-        )}
+  // Pendant la vérification du token
+  if (checking) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: 16,
+        background: "var(--bg)",
+      }}>
+        <div className="spinner" />
+        <p style={{ color: "var(--text-m)", fontSize: "0.9rem" }}>Vérification de la session...</p>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-export default App;
+  // Pas connecté → page de login
+  if (!user) return <LoginPage onLogin={handleLogin} />;
+
+  // Connecté → dashboard selon le rôle
+  switch (user.role) {
+    case "admin":
+      return <AdminDashboard user={user} onLogout={handleLogout} />;
+    case "professeur":
+      return <ProfesseurDashboard user={user} onLogout={handleLogout} />;
+    case "etudiant":
+      return <EtudiantDashboard user={user} onLogout={handleLogout} />;
+    default:
+      return (
+        <div style={{ padding: 40, textAlign: "center" }}>
+          <h2>Rôle inconnu : {user.role}</h2>
+          <button className="btn btn-danger" onClick={handleLogout}>Déconnexion</button>
+        </div>
+      );
+  }
+}

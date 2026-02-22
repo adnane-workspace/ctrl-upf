@@ -1,26 +1,134 @@
-# ============================================
-# RACINE DU PROJET - Fichiers à NE PAS pousser
-# ============================================
+# ════════════════════════════════════════════════════════════════════
+# 🚫 GITIGNORE GLOBAL - CTRL-UPF
+# ════════════════════════════════════════════════════════════════════
+# Fichiers et dossiers à IGNORER lors des commits GitHub
+#
 
-# 📦 Dépendances (présentes dans backend/ et frontend/)
-node_modules/
+# 💻 Systèmes d'exploitation
+# ────────────────────────────────────────────────────────────────────
+.DS_Store              # macOS
+Thumbs.db              # Windows
+desktop.ini            # Windows
+*.exe                  # Windows
+*.dll                  # Windows
+.AppleDouble           # macOS
+.LSOverride            # macOS
 
-# 🔐 Tous les fichiers .env du projet
-**/.env
-**/.env.local
-**/.env.*.local
+# 🔐 Variables d'environnement (DONNÉES SENSIBLES)
+# ────────────────────────────────────────────────────────────────────
+# ⚠️  JAMAIS COMMITTER DE .env ⚠️
+.env                   # Variables d'environnement
+.env.local             # Surcharges locales
+.env.*.local           # Surcharges par environnement
+.env.development       # Scripts locaux
+.env.production        # Scripts locaux
+.env.test              # Scripts locaux
 
-# 📝 Logs
+# 📦 Dépendances et modules (se réinstallent automatiquement)
+# ────────────────────────────────────────────────────────────────────
+node_modules/          # Dépendances npm
+/.pnp                  # Pnpm
+.pnp.js                # Pnpm
+dist/                  # Build distribution
+build/                 # Build production
+
+# 📝 Logs et fichiers temporaires
+# ────────────────────────────────────────────────────────────────────
 *.log
 logs/
+*.log.gz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.npm                   # npm
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# 💻 Fichiers système OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# 🗂️ Cache et fichiers temporaires
+# ────────────────────────────────────────────────────────────────────
+.cache/
+tmp/
+temp/
+.eslintcache           # ESLint cache
+coverage/              # Couverture de tests
+.nyc_output/           # NYC coverage
+.next/                 # Next.js
+.nuxt/                 # Nuxt.js
+.cache/                # Cache général
 
-# 🛠️ Éditeurs de code
-.vscode/
-.idea/
-*.swp
-*.swo
+# 🛠️ Éditeurs et IDEs (préférences personnelles)
+# ────────────────────────────────────────────────────────────────────
+.vscode/               # VS Code
+.vscode-server/        # Remote VS Code
+.idea/                 # JetBrains
+*.swp                  # Vim
+*.swo                  # Vim
+*~                     # Emacs/Vim
+.sublime-project       # Sublime Text
+.sublime-workspace     # Sublime Text
+*.iml                  # IntelliJ
+
+# 📱 Dépôts et systèmes de contrôle de version
+# ────────────────────────────────────────────────────────────────────
+.git/
+.gitmodules
+.hg/
+.svn/
+CVS/
+
+# 🔧 Outils de développement
+# ────────────────────────────────────────────────────────────────────
+.turbo/                # Turbo
+.next/                 # Next.js
+dist/                  # Distribution
+.vercel/               # Vercel
+.dmg                   # macOS app
+.exe                   # Windows app
+.app/                  # macOS app
+
+# 🗄️ Bases de données
+# ────────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+mongo.log
+
+# 📊 Fichiers sensibles (données personnelles)
+# ────────────────────────────────────────────────────────────────────
+*.pem                  # Certificats SSL/TLS
+*.key                  # Clés privées
+*.cert                 # Certificats
+secrets/               # Fichiers secrets
+private/               # Fichiers privés
+credentials.json       # Identifiants
+config.production.js   # Config sensible
+
+# 📦 Fichiers de lock (optionnel - certains préfèrent les committer)
+# Décommenter si vous voulez ignorer:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ═══════════════════════════════════════════════════════════════════
+# 📌 NOTE IMPORTANTE
+# ═══════════════════════════════════════════════════════════════════
+# 
+# ✅ À COMMITTER:
+#   - package.json      (dépendances spécifiques)
+#   - .env.example      (template sans données sensibles)
+#   - README.md         (documentation)
+#   - src/              (code source)
+#   - public/           (assets publics)
+#
+# ❌ À NE JAMAIS COMMITTER:
+#   - .env              (données sensibles: mots de passe, clés API, URI BD)
+#   - node_modules/     (trop gros, se réinstalle avec npm install)
+#   - .vscode/          (préférences personnelles)
+#   - .idea/            (préférences personnelles)
+#   - *.log             (fichiers temporaires)
+#   - build/            (généré automatiquement)
+#

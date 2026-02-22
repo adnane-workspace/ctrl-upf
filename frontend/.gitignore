@@ -16,19 +16,23 @@
 
 # 🏗️ Build de production (généré automatiquement)
 /build
+/dist
 
 # 🧪 Couverture de tests
 /coverage
+.nyc_output/
 
 # 📝 Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.log
+lerna-debug.log*
 
 # 🗂️ Fichiers de cache
 .cache/
 .npm
+.eslintcache
 
 # 💻 Fichiers système OS
 .DS_Store
@@ -40,3 +44,9 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+*~
+*.iml
+
+# 🔧 Autres outils
+.next/
+.nuxt/

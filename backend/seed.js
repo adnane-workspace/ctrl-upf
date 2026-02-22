@@ -8,6 +8,7 @@
  */
 
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
 // Import de tous les modèles
@@ -49,40 +50,43 @@ const seed = async () => {
         // ─────────────────────────────────────────────────────────
         console.log("\n Création des utilisateurs...");
 
-        // ATTENTION : En production, le mot de passe doit être hashé avec bcrypt.
-        // Ici on met du texte brut juste pour le seed de démonstration.
+        // ✅ Les mots de passe sont hashés avec bcrypt (sécurité)
+        const hashAdmin = await bcrypt.hash("admin123", 10);
+        const hashProf = await bcrypt.hash("prof123", 10);
+        const hashEtud = await bcrypt.hash("etud123", 10);
+
         const userAdmin = await User.create({
             nom: "Admin",
             email: "admin@upf.ma",
-            password: "admin123",
+            password: hashAdmin,
             role: "admin",
         });
 
         const userProf1 = await User.create({
             nom: "Mohammed Alami",
             email: "prof1@upf.ma",
-            password: "prof123",
+            password: hashProf,
             role: "professeur",
         });
 
         const userProf2 = await User.create({
             nom: "Fatima Zahrae",
             email: "prof2@upf.ma",
-            password: "prof123",
+            password: hashProf,
             role: "professeur",
         });
 
         const userEtud1 = await User.create({
             nom: "Adnane elmen",
             email: "adnaneelmen@upf.ma",
-            password: "etud123",
+            password: hashEtud,
             role: "etudiant",
         });
 
         const userEtud2 = await User.create({
             nom: "kenza boutarfass",
             email: "kenza@upf.ma",
-            password: "etud123",
+            password: hashEtud,
             role: "etudiant",
         });
 

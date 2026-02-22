@@ -16,10 +16,12 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
 # 🗂️ Fichiers de cache
 .npm
 .cache/
+.eslintcache
 
 # 💻 Fichiers système OS
 .DS_Store
@@ -31,3 +33,11 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+*~
+*.iml
+
+# 🗄️ Base de données
+*.db
+*.sqlite
+*.sqlite3
+mongo.log
