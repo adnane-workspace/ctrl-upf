@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProfesseurDashboard from "./pages/ProfesseurDashboard";
 import EtudiantDashboard from "./pages/EtudiantDashboard";
 import { authAPI } from "./api";
+import ClubsPage from "./pages/ClubsPage"; // AJOUT
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -34,6 +35,11 @@ export default function App() {
     localStorage.removeItem("user");
     setUser(null);
   };
+
+  const pathname = window.location.pathname; // AJOUT
+  if (pathname === "/clubs") { // AJOUT
+    return <ClubsPage />; // AJOUT
+  } // AJOUT
 
   // Pendant la vérification du token
   if (checking) {

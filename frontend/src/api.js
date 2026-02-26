@@ -44,4 +44,21 @@ export const etudiantAPI = {
     getDashboard: () => API.get("/etudiant/dashboard"),
 };
 
+// AJOUT - Clubs & Événements
+export const clubsAPI = {
+    fetchClubs: () => API.get("/admin/clubs"), // AJOUT
+    fetchClubById: (id) => API.get(`/admin/clubs/${id}`), // AJOUT
+    fetchEvenements: (clubId = null) => { // AJOUT
+        const params = {}; // AJOUT
+        if (clubId) { // AJOUT
+            params.clubId = clubId; // AJOUT
+        } // AJOUT
+        return API.get("/admin/evenements", { params }); // AJOUT
+    }, // AJOUT
+    createEvenement: (formData) => // AJOUT
+        API.post("/admin/evenements", formData, { // AJOUT
+            headers: { "Content-Type": "multipart/form-data" }, // AJOUT
+        }), // AJOUT
+};
+
 export default API;

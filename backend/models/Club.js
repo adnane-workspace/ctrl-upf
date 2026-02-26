@@ -28,8 +28,18 @@ const clubSchema = new mongoose.Schema(
         ref: "Etudiant",
       },
     ],
+    dateCreation: {
+      type: Date,
+      default: Date.now,
+    }, // AJOUT
   },
   { timestamps: true }
 );
+
+clubSchema.virtual("evenements", {
+  ref: "Evenement",
+  localField: "_id",
+  foreignField: "club",
+}); // AJOUT
 
 module.exports = mongoose.model("Club", clubSchema);

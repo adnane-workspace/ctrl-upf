@@ -12,15 +12,38 @@ const evenementSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    details: {
+      type: String,
+      trim: true,
+      default: "",
+    }, // AJOUT
     date: {
       type: Date,
       required: [true, "La date de l'événement est obligatoire"],
     },
+    heure: {
+      type: String,
+      required: [true, "L'heure de l'événement est obligatoire"],
+      trim: true,
+    }, // AJOUT
     lieu: {
       type: String,
       required: [true, "Le lieu est obligatoire"],
       trim: true,
     },
+    photo: {
+      type: String,
+      default: "",
+    }, // AJOUT
+    interesses: {
+      type: Number,
+      default: 0,
+    }, // AJOUT
+    club: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Club",
+      required: true,
+    }, // AJOUT
     placesDisponibles: {
       type: Number,
       required: [true, "Le nombre de places est obligatoire"],
