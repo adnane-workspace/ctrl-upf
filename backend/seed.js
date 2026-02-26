@@ -260,7 +260,7 @@ const seed = async () => {
         // ─────────────────────────────────────────────────────────
         console.log("\n Création des clubs...");
 
-        await Club.create({
+        const club = await Club.create({
             nom: "Club Informatique",
             description: "Club dédié aux passionnés de la tech et du code.",
             responsable: etud1._id,
@@ -277,8 +277,11 @@ const seed = async () => {
         await Evenement.create({
             titre: "Hackathon UIT 2024",
             description: "Concours de développement de 24h.",
+            details: "Concours de développement de 24h avec prix à la clé.",
             date: new Date("2024-04-10"),
+            heure: "09:00",
             lieu: "Salle des conférences — Bâtiment A",
+            club: club._id,
             placesDisponibles: 50,
             participants: [etud1._id, etud2._id],
         });
