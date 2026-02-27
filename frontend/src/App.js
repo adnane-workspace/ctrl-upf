@@ -36,10 +36,7 @@ export default function App() {
     setUser(null);
   };
 
-  const pathname = window.location.pathname; // AJOUT
-  if (pathname === "/clubs") { // AJOUT
-    return <ClubsPage />; // AJOUT
-  } // AJOUT
+  const pathname = window.location.pathname;
 
   // Pendant la vérification du token
   if (checking) {
@@ -62,7 +59,7 @@ export default function App() {
   // Pas connecté → page de login
   if (!user) return <LoginPage onLogin={handleLogin} />;
 
-  // Connecté → dashboard selon le rôle
+  // Connecté  → dashboard selon le rôle
   switch (user.role) {
     case "admin":
       return <AdminDashboard user={user} onLogout={handleLogout} />;
@@ -70,6 +67,8 @@ export default function App() {
       return <ProfesseurDashboard user={user} onLogout={handleLogout} />;
     case "etudiant":
       return <EtudiantDashboard user={user} onLogout={handleLogout} />;
+    case "president_club":
+      return <ClubsPage user={user} onLogout={handleLogout} />;
     default:
       return (
         <div style={{ padding: 40, textAlign: "center" }}>

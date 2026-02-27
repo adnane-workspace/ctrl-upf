@@ -109,6 +109,7 @@ export default function LoginPage({ onLogin }) {
                         { role: "Admin", email: "admin@upf.ma", pwd: "admin123", cls: "badge-admin" },
                         { role: "Professeur", email: "prof1@upf.ma", pwd: "prof123", cls: "badge-professeur" },
                         { role: "Étudiant", email: "adnaneelmen@upf.ma", pwd: "etud123", cls: "badge-etudiant" },
+                        { role: "Président Club", email: "president@upf.ma", pwd: "club123", cls: "badge-etudiant" },
                     ].map((c) => (
                         <div
                             key={c.email}

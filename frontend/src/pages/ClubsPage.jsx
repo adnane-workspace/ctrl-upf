@@ -75,7 +75,7 @@ const errorTextStyle = { // AJOUT
   marginTop: 4,
 }; // AJOUT
 
-export default function ClubsPage() { // AJOUT
+export default function ClubsPage({ user, onLogout }) { // AJOUT
   const [clubs, setClubs] = useState([]); // AJOUT
   const [events, setEvents] = useState([]); // AJOUT
   const [filteredEvents, setFilteredEvents] = useState([]); // AJOUT
@@ -92,7 +92,7 @@ export default function ClubsPage() { // AJOUT
     date: "",
     heure: "",
     lieu: "",
-   details: "",
+    details: "",
     photoFile: null,
   }); // AJOUT
   const [formErrors, setFormErrors] = useState({}); // AJOUT
@@ -323,11 +323,83 @@ export default function ClubsPage() { // AJOUT
           />
         </div>
 
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button style={buttonPrimaryStyle} onClick={handleOpenModal}>
             <span style={{ fontSize: 18 }}>+</span>
             <span>List Event</span>
           </button>
+
+          {/* Nom utilisateur + Déconnexion */}
+          {user && (
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
+                borderRadius: 999,
+                background: "#f3f4f6",
+                border: "1px solid #e5e7eb",
+              }}>
+                <div style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "#111827",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#ffffff",
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}>
+                  {(user.nom || "?")[0].toUpperCase()}
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>
+                  {user.nom}
+                </span>
+                <span style={{
+                  fontSize: 11,
+                  color: "#ffffff",
+                  background: "#7c3aed",
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  fontWeight: 600,
+                }}>
+                  Président
+                </span>
+              </div>
+              <button
+                onClick={onLogout}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 999,
+                  border: "1.5px solid #e5e7eb",
+                  backgroundColor: "#ffffff",
+                  color: "#374151",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = "#fee2e2";
+                  e.currentTarget.style.borderColor = "#fca5a5";
+                  e.currentTarget.style.color = "#b91c1c";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = "#ffffff";
+                  e.currentTarget.style.borderColor = "#e5e7eb";
+                  e.currentTarget.style.color = "#374151";
+                }}
+              >
+                🚪 Déconnexion
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -596,10 +668,10 @@ export default function ClubsPage() { // AJOUT
                       <span>
                         {evt.date
                           ? new Date(evt.date).toLocaleDateString("fr-FR", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })
                           : "-"}
                       </span>
                     </div>
@@ -1015,10 +1087,10 @@ export default function ClubsPage() { // AJOUT
                 <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
                   {selectedEventForDetails.date
                     ? new Date(selectedEventForDetails.date).toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })
                     : "-"}
                 </span>
               </div>
