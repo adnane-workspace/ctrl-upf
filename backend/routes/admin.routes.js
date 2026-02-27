@@ -25,6 +25,13 @@ router.post("/clubs", protect, authorize("admin"), uploadLogo.single("logo"), cr
 router.put("/clubs/:id", protect, authorize("admin"), uploadLogo.single("logo"), updateClub);
 
 // Routes protégées pour les événements
-router.post("/evenements", protect, authorize("admin"), uploadPhoto.single("photo"), createEvenement);
+// Only club presidents may create events now
+router.post(
+  "/evenements",
+  protect,
+  authorize("president_club"),
+  uploadPhoto.single("photo"),
+  createEvenement
+);
 
 module.exports = router;

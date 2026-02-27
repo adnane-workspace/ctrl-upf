@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "professeur", "etudiant", "president_club"],
+      // add "president" role; keep existing president_club for backward compatibility
+      enum: ["admin", "professeur", "etudiant", "president_club", "president"],
       default: "etudiant",
       required: true,
     },

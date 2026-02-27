@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"; // AJOUT
+import React, { useEffect, useMemo, useState, useRef } from "react"; // AJOUT
 import { clubsAPI } from "../api"; // AJOUT
 
 const containerStyle = { // AJOUT
@@ -83,6 +83,9 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
   const [searchTerm, setSearchTerm] = useState(""); // AJOUT
   const [loading, setLoading] = useState(true); // AJOUT
   const [error, setError] = useState(null); // AJOUT
+  const [success, setSuccess] = useState(null); // AJOUT
+  const [showAllEvents, setShowAllEvents] = useState(false); // AJOUT
+
 
   const [isModalOpen, setIsModalOpen] = useState(false); // AJOUT
   const [selectedEventForDetails, setSelectedEventForDetails] = useState(null); // AJOUT
@@ -98,6 +101,7 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
   const [formErrors, setFormErrors] = useState({}); // AJOUT
   const [previewUrl, setPreviewUrl] = useState(null); // AJOUT
   const [submitting, setSubmitting] = useState(false); // AJOUT
+  const agendaRef = useRef(null); // AJOUT
 
   useEffect(() => { // AJOUT
     let isMounted = true;
@@ -151,6 +155,10 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
           (evt.titre || "").toLowerCase().includes(searchTerm.trim().toLowerCase())
         )
       );
+      // Scroll to agenda section
+      setTimeout(() => {
+        agendaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     } catch (err) {
       setError("Impossible de charger les événements du club sélectionné.");
     } finally {
@@ -239,24 +247,40 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
       formData.append("heure", form.heure);
       formData.append("lieu", form.lieu);
       formData.append("details", form.details);
+      // Ensure placesDisponibles is always sent (backend requires it)
+      formData.append("placesDisponibles", form.placesDisponibles || 0);
       if (form.photoFile) {
         formData.append("photo", form.photoFile);
       }
 
-      await clubsAPI.createEvenement(formData);
+      const createRes = await clubsAPI.createEvenement(formData);
+      const created = createRes.data?.evenement;
 
-      const res = await clubsAPI.fetchEvenements(selectedClubId);
-      const evts = res.data.evenements || [];
-      setEvents(evts);
-      setFilteredEvents(
-        evts.filter((evt) =>
-          (evt.titre || "").toLowerCase().includes(searchTerm.trim().toLowerCase())
-        )
-      );
+      // If created event exists, update local state to show it immediately
+      if (created) {
+        // If current filter is "all" or matches the created event's club, append it
+        const createdClubId = created.club && created.club._id ? created.club._id : created.club;
+        const filterMatches = !selectedClubId || selectedClubId === createdClubId;
+
+        if (filterMatches) {
+          setEvents((prev) => [created, ...prev]);
+          setFilteredEvents((prev) => {
+            const withNew = [created, ...prev];
+            // apply searchTerm filtering
+            const term = searchTerm.trim().toLowerCase();
+            if (!term) return withNew;
+            return withNew.filter((evt) => (evt.titre || "").toLowerCase().includes(term));
+          });
+        }
+
+        setSuccess("Événement créé avec succès.");
+        setTimeout(() => setSuccess(null), 3500);
+      }
 
       setIsModalOpen(false);
     } catch (err) {
-      setError("Erreur lors de la création de l'événement.");
+      const msg = err?.response?.data?.message || err.message || "Erreur lors de la création de l'événement.";
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -273,6 +297,11 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
       }),
     [filteredEvents, clubs]
   );
+
+  // whenever the event list changes (filter/club/search), collapse the view
+  useEffect(() => {
+    setShowAllEvents(false);
+  }, [eventsGrid]);
 
   return ( // AJOUT
     <div style={containerStyle}>
@@ -324,10 +353,12 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <button style={buttonPrimaryStyle} onClick={handleOpenModal}>
-            <span style={{ fontSize: 18 }}>+</span>
-            <span>List Event</span>
-          </button>
+          {user && user.role === "president_club" && (
+            <button style={buttonPrimaryStyle} onClick={handleOpenModal}>
+              <span style={{ fontSize: 18 }}>+</span>
+              <span>List Event</span>
+            </button>
+          )}
 
           {/* Nom utilisateur + Déconnexion */}
           {user && (
@@ -402,6 +433,21 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
           )}
         </div>
       </header>
+
+      {success && (
+        <div
+          style={{
+            marginBottom: 16,
+            padding: "10px 14px",
+            borderRadius: 12,
+            background: "#ecfdf5",
+            color: "#065f46",
+            fontSize: 13,
+          }}
+        >
+          {success}
+        </div>
+      )}
 
       {error && (
         <div
@@ -543,7 +589,7 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
       </section>
 
       {/* SECTION AGENDA */}
-      <section style={sectionCardStyle}>
+      <section ref={agendaRef} style={sectionCardStyle}>
         <div
           style={{
             display: "flex",
@@ -567,20 +613,22 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
               Restez informé des ateliers, conférences et activités à venir.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleResetFilter}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#4b5563",
-              fontSize: 13,
-              cursor: "pointer",
-              fontWeight: 500,
-            }}
-          >
-            View All &rarr;
-          </button>
+          {eventsGrid.length > 2 && (
+            <button
+              type="button"
+              onClick={() => setShowAllEvents((prev) => !prev)}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#4b5563",
+                fontSize: 13,
+                cursor: "pointer",
+                fontWeight: 500,
+              }}
+            >
+              {showAllEvents ? "Show Less ←" : "View All →"}
+            </button>
+          )} 
         </div>
 
         {loading && events.length === 0 ? (
@@ -590,14 +638,15 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
             Aucun événement ne correspond à la recherche ou au filtre.
           </p>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: 18,
-            }}
-          >
-            {eventsGrid.map((evt) => (
+          <>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 18,
+              }}
+            >
+              {(showAllEvents ? eventsGrid : eventsGrid.slice(0, 2)).map((evt) => (
               <div
                 key={evt._id}
                 style={{
@@ -713,6 +762,19 @@ export default function ClubsPage({ user, onLogout }) { // AJOUT
               </div>
             ))}
           </div>
+
+          {!showAllEvents && eventsGrid.length > 2 && (
+            <div
+              style={{
+                marginTop: 12,
+                fontSize: 13,
+                color: "#6b7280",
+              }}
+            >
+              + {eventsGrid.length - 2} autres événements
+            </div>
+          )}
+        </>
         )}
       </section>
 
