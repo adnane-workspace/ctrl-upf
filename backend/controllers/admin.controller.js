@@ -46,6 +46,69 @@ const getClubById = async (req, res) => {
     }
 }; // AJOUT
 
+// ──── CRÉER UN CLUB ─────────────────────────────────────────
+const createClub = async (req, res) => {
+    try {
+        const { nom, description, responsable } = req.body;
+
+        if (!nom) {
+            return res.status(400).json({ success: false, message: "Le nom du club est obligatoire" });
+        }
+
+        // Vérifier si un club avec ce nom existe déjà
+        const existingClub = await Club.findOne({ nom });
+        if (existingClub) {
+            return res.status(400).json({ success: false, message: "Un club avec ce nom existe déjà" });
+        }
+
+        // Construire l'URL du logo
+        const logoUrl = req.file ? `/uploads/clubs/${req.file.filename}` : "";
+
+        const newClub = await Club.create({
+            nom,
+            description: description || "",
+            logo: logoUrl,
+            responsable: responsable || null,
+        });
+
+        res.status(201).json({ success: true, club: newClub });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+// ──── MODIFIER UN CLUB ──────────────────────────────────────
+const updateClub = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nom, description, responsable } = req.body;
+
+        // Vérifier que le club existe
+        const club = await Club.findById(id);
+        if (!club) {
+            return res.status(404).json({ success: false, message: "Club non trouvé" });
+        }
+
+        // Si un nouveau logo est fourni, l'utiliser ; sinon, garder l'ancien
+        const logoUrl = req.file ? `/uploads/clubs/${req.file.filename}` : club.logo;
+
+        const updatedClub = await Club.findByIdAndUpdate(
+            id,
+            {
+                nom: nom || club.nom,
+                description: description !== undefined ? description : club.description,
+                logo: logoUrl,
+                responsable: responsable !== undefined ? responsable : club.responsable,
+            },
+            { new: true }
+        );
+
+        res.json({ success: true, club: updatedClub });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
 const createEvenement = async (req, res) => {
     try {
         const { titre, details, date, heure, lieu, clubId } = req.body; // AJOUT
@@ -55,7 +118,7 @@ const createEvenement = async (req, res) => {
         } // AJOUT
 
         const photoUrl = req.file // AJOUT
-            ? `/uploads/${req.file.filename}` // AJOUT
+            ? `/uploads/events/${req.file.filename}` // AJOUT
             : req.body.photo || ""; // AJOUT (fallback base64 / URL directe)
 
         const evenement = await Evenement.create({ // AJOUT
@@ -98,6 +161,8 @@ module.exports = {
     getDashboard,
     getClubs, // AJOUT
     getClubById, // AJOUT
+    createClub, // NOUVEAU
+    updateClub, // NOUVEAU
     createEvenement, // AJOUT
     getEvenements, // AJOUT
 };

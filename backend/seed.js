@@ -263,11 +263,21 @@ const seed = async () => {
         const club = await Club.create({
             nom: "Club Informatique",
             description: "Club dédié aux passionnés de la tech et du code.",
+            logo: "/photos/clubs/UIT.png",
             responsable: etud1._id,
             membres: [etud1._id, etud2._id],
         });
 
-        console.log(`${await Club.countDocuments()} club créé.`);
+        // second club requested by user
+        const club2 = await Club.create({
+            nom: "Club Robotique",
+            description: "Club dédié à la robotique et à l'électronique.",
+            logo: "photos/clubs/robotic.jpeg",
+            responsable: etud2._id,
+            membres: [etud1._id, etud2._id],
+        });
+
+        console.log(`${await Club.countDocuments()} clubs créés.`);
 
         // ─────────────────────────────────────────────────────────
         // 1️⃣3️⃣ CRÉATION DES ÉVÉNEMENTS
@@ -281,6 +291,7 @@ const seed = async () => {
             date: new Date("2024-04-10"),
             heure: "09:00",
             lieu: "Salle des conférences — Bâtiment A",
+            image: "photos/events/hack.jpg",
             club: club._id,
             placesDisponibles: 50,
             participants: [etud1._id, etud2._id],

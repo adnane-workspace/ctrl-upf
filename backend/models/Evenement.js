@@ -35,6 +35,10 @@ const evenementSchema = new mongoose.Schema(
       type: String,
       default: "",
     }, // AJOUT
+    image: {
+      type: String,
+      default: "",
+    },
     interesses: {
       type: Number,
       default: 0,

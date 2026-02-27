@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ─── SERVEUR DE FICHIERS STATIQUES ───────────────────────────
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/photos", express.static(path.join(__dirname, "..", "photos")));
 
 // ─── CONNEXION MONGODB ───────────────────────────────────────
 const MONGO_URI = process.env.MONGO_URI;

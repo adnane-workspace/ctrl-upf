@@ -48,6 +48,14 @@ export const etudiantAPI = {
 export const clubsAPI = {
     fetchClubs: () => API.get("/admin/clubs"), // AJOUT
     fetchClubById: (id) => API.get(`/admin/clubs/${id}`), // AJOUT
+    createClub: (formData) => // NOUVEAU
+        API.post("/admin/clubs", formData, { // NOUVEAU
+            headers: { "Content-Type": "multipart/form-data" }, // NOUVEAU
+        }), // NOUVEAU
+    updateClub: (id, formData) => // NOUVEAU
+        API.put(`/admin/clubs/${id}`, formData, { // NOUVEAU
+            headers: { "Content-Type": "multipart/form-data" }, // NOUVEAU
+        }), // NOUVEAU
     fetchEvenements: (clubId = null) => { // AJOUT
         const params = {}; // AJOUT
         if (clubId) { // AJOUT

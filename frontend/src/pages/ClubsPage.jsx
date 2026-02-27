@@ -85,6 +85,7 @@ export default function ClubsPage() { // AJOUT
   const [error, setError] = useState(null); // AJOUT
 
   const [isModalOpen, setIsModalOpen] = useState(false); // AJOUT
+  const [selectedEventForDetails, setSelectedEventForDetails] = useState(null); // AJOUT
   const [form, setForm] = useState({ // AJOUT
     titre: "",
     clubId: "",
@@ -537,7 +538,13 @@ export default function ClubsPage() { // AJOUT
                 }}
               >
                 <div style={{ height: 160, background: "#111827" }}>
-                  {evt.photo ? (
+                  {evt.image ? (
+                    <img
+                      src={evt.image}
+                      alt={evt.titre}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : evt.photo ? (
                     <img
                       src={evt.photo}
                       alt={evt.titre}
@@ -612,6 +619,7 @@ export default function ClubsPage() { // AJOUT
                   <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <button
                       type="button"
+                      onClick={() => setSelectedEventForDetails(evt)}
                       style={{
                         padding: "8px 14px",
                         borderRadius: 999,
@@ -907,6 +915,198 @@ export default function ClubsPage() { // AJOUT
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DÉTAILS ÉVÉNEMENT */}
+      {selectedEventForDetails && (
+        <div
+          style={modalBackdropStyle}
+          onClick={() => setSelectedEventForDetails(null)}
+        >
+          <div
+            style={modalCardStyle}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Fermer */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                marginBottom: 16,
+              }}
+            >
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#111827",
+                }}
+              >
+                Détails de l'événement
+              </h2>
+              <button
+                type="button"
+                onClick={() => setSelectedEventForDetails(null)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: 24,
+                  cursor: "pointer",
+                  color: "#6b7280",
+                  padding: 0,
+                  width: 32,
+                  height: 32,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Image */}
+            {(selectedEventForDetails.image || selectedEventForDetails.photo) && (
+              <div
+                style={{
+                  marginBottom: 16,
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  maxHeight: 280,
+                }}
+              >
+                <img
+                  src={selectedEventForDetails.image || selectedEventForDetails.photo}
+                  alt={selectedEventForDetails.titre}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </div>
+            )}
+
+            {/* Titre */}
+            <div style={{ marginBottom: 12 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111827" }}>
+                {selectedEventForDetails.titre}
+              </h3>
+            </div>
+
+            {/* Club */}
+            <div style={{ marginBottom: 8 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
+                Club organisateur :
+              </span>
+              <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
+                {selectedEventForDetails.club && typeof selectedEventForDetails.club === "object"
+                  ? selectedEventForDetails.club.nom
+                  : selectedEventForDetails.club || "Clubs UPF"}
+              </span>
+            </div>
+
+            {/* Date et Heure */}
+            <div style={{ marginBottom: 8, display: "flex", gap: 24 }}>
+              <div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
+                  Date :
+                </span>
+                <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
+                  {selectedEventForDetails.date
+                    ? new Date(selectedEventForDetails.date).toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "-"}
+                </span>
+              </div>
+              <div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
+                  Heure :
+                </span>
+                <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
+                  {selectedEventForDetails.heure || "-"}
+                </span>
+              </div>
+            </div>
+
+            {/* Lieu */}
+            <div style={{ marginBottom: 8 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
+                Lieu :
+              </span>
+              <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
+                {selectedEventForDetails.lieu || "-"}
+              </span>
+            </div>
+
+            {/* Intéressés */}
+            <div style={{ marginBottom: 16 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>
+                Nombre d'intéressés :
+              </span>
+              <span style={{ fontSize: 13, color: "#111827", marginLeft: 6 }}>
+                {selectedEventForDetails.interesses ?? 0}
+              </span>
+            </div>
+
+            {/* Description */}
+            {selectedEventForDetails.description && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+                  Description
+                </div>
+                <p style={{ margin: 0, fontSize: 13, color: "#111827", lineHeight: 1.5 }}>
+                  {selectedEventForDetails.description}
+                </p>
+              </div>
+            )}
+
+            {/* Détails */}
+            {selectedEventForDetails.details && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
+                  Détails
+                </div>
+                <p style={{ margin: 0, fontSize: 13, color: "#111827", lineHeight: 1.5 }}>
+                  {selectedEventForDetails.details}
+                </p>
+              </div>
+            )}
+
+            {/* Boutons */}
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                marginTop: 18,
+              }}
+            >
+              <button
+                type="button"
+                style={buttonPrimaryStyle}
+              >
+                Je suis intéressé
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedEventForDetails(null)}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: 999,
+                  border: "1px solid #d1d5db",
+                  background: "#ffffff",
+                  color: "#111827",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                Fermer
+              </button>
+            </div>
           </div>
         </div>
       )}
