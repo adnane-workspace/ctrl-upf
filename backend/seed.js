@@ -54,6 +54,7 @@ const seed = async () => {
         const hashAdmin = await bcrypt.hash("admin123", 10);
         const hashProf = await bcrypt.hash("prof123", 10);
         const hashEtud = await bcrypt.hash("etud123", 10);
+        const hashPresident = await bcrypt.hash("club123", 10);
 
         const userAdmin = await User.create({
             nom: "Admin",
@@ -88,6 +89,13 @@ const seed = async () => {
             email: "kenza@upf.ma",
             password: hashEtud,
             role: "etudiant",
+        });
+
+        const userPresident = await User.create({
+            nom: "Youssef Club",
+            email: "president@upf.ma",
+            password: hashPresident,
+            role: "president_club",
         });
 
         console.log(`${await User.countDocuments()} utilisateurs créés.`);
