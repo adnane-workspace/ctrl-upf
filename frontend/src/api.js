@@ -38,6 +38,19 @@ export const adminAPI = {
 
 export const professeurAPI = {
     getDashboard: () => API.get("/professeur/dashboard"),
+    getCours: () => API.get("/professeur/cours"),
+    getSeances: (vue, date) => API.get("/professeur/seances", { params: { vue, date } }),
+    getAbsences: (params) => API.get("/professeur/absences", { params }),
+    signalerAbsence: (data) => API.post("/professeur/absences", data),
+    updateAbsence: (id, data) => API.patch(`/professeur/absences/${id}`, data),
+    supprimerAbsence: (id) => API.delete(`/professeur/absences/${id}`),
+    getNotes: (params) => API.get("/professeur/notes", { params }),
+    ajouterNote: (data) => API.post("/professeur/notes", data),
+    batchAjouterNotes: (data) => API.post("/professeur/notes/batch", data),
+    updateNote: (id, data) => API.patch(`/professeur/notes/${id}`, data),
+    supprimerNote: (id) => API.delete(`/professeur/notes/${id}`),
+    getEtudiants: () => API.get("/professeur/etudiants"),
+    getEtudiantsParCours: (coursId) => API.get(`/professeur/etudiants-par-cours/${coursId}`),
 };
 
 export const etudiantAPI = {

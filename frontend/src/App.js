@@ -36,7 +36,6 @@ export default function App() {
     setUser(null);
   };
 
-  const pathname = window.location.pathname;
 
   // Pendant la vérification du token
   if (checking) {

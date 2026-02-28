@@ -30,6 +30,18 @@ const devoirSchema = new mongoose.Schema(
       ref: "Etudiant",
       required: [true, "L'étudiant est obligatoire"],
     },
+    // ─── Champs pour les notes ───────────────────────
+    note: {
+      type: Number,
+      min: 0,
+      max: 20,
+      default: null,
+    },
+    commentaire: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   { timestamps: true }
 );
